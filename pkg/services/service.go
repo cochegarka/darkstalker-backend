@@ -9,5 +9,5 @@ type Service interface {
 
 type stalker interface {
 	// Returns data about user with given id.
-	StalkUser(ctx context.Context, userId string) (interface{}, error)
+	StalkUser(ctx context.Context, userId string) (map[string]interface{}, error)
 }
