@@ -22,6 +22,7 @@ func main() {
 	var h http.Handler
 	{
 		h = httptransport.MakeHTTPHandler("v1", svc)
+		h = corsMiddleware(h)
 	}
 
 	port := os.Getenv("PORT")
@@ -30,4 +31,15 @@ func main() {
 	}
 
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", port), h))
+}
+
+// Allows CORS for given handler.
+func corsMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "GET")
+		w.Header().Set("Access-Control-Allow-Headers", "Origin, Content-Type")
+
+		next.ServeHTTP(w, r)
+	})
 }
